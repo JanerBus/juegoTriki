@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Triki</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🎮 Juego de Triki 🎮</h1>
+    </header>
+
+    <section class="instrucciones">
+        <h2>¿Cómo se juega?</h2>
+        <p>El Triki (o Tres en línea) es un juego para dos jugadores, <strong style="color: var(--color-primario);">X</strong> y <strong style="color: var(--color-secundario);">O</strong>, que se turnan para marcar los espacios en una cuadrícula de 3×3.</p>
+        <p>El jugador que logre colocar tres de sus marcas en una fila horizontal, vertical o diagonal será el ganador.</p>
+    </section>
+
+    <main class="juego-contenedor">
+        <div class="estado" id="estado">Turno de X</div>
+        <div class="tablero" id="tablero">
+            <div class="celda" data-indice="0"></div>
+            <div class="celda" data-indice="1"></div>
+            <div class="celda" data-indice="2"></div>
+            <div class="celda" data-indice="3"></div>
+            <div class="celda" data-indice="4"></div>
+            <div class="celda" data-indice="5"></div>
+            <div class="celda" data-indice="6"></div>
+            <div class="celda" data-indice="7"></div>
+            <div class="celda" data-indice="8"></div>
+        </div>
+        <button id="reiniciar">Reiniciar Juego</button>
+    </main>
+
+    <footer>
+        <p>Estudiante: Janer Andrés Bustillo</p>
+        <p>Desarrollo Full Stack con IA</p>
+        <p>Universidad de Santander</p>
+        <p>2026</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
