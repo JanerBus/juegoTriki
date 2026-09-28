@@ -2,6 +2,8 @@
 
 Un proyecto web interactivo del clásico juego de Triki (también conocido como Tres en línea), desarrollado con HTML, CSS y JavaScript.
 
+🔗 **Juega ahora en línea:** [Juego de Triki](https://juego-triki-xi.vercel.app/)
+
 ## 🚀 Características
 *   **Interfaz Atractiva:** Diseño moderno con animaciones, sombras y colores vibrantes.
 *   **Responsivo:** Se adapta perfectamente a pantallas pequeñas y grandes.
