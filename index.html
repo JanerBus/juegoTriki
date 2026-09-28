@@ -18,6 +18,15 @@
     </section>
 
     <main class="juego-contenedor">
+        <div class="controles">
+            <label>
+                <input type="radio" name="modo" value="1v1" checked> 👤 vs 👤
+            </label>
+            <label>
+                <input type="radio" name="modo" value="vsMaquina"> 👤 vs 🤖
+            </label>
+        </div>
+        
         <div class="estado" id="estado">Turno de X</div>
         <div class="tablero" id="tablero">
             <div class="celda" data-indice="0"></div>
@@ -33,11 +42,29 @@
         <button id="reiniciar">Reiniciar Juego</button>
     </main>
 
-    <footer>
-        <p>Estudiante: Janer Andrés Bustillo</p>
-        <p>Desarrollo Full Stack con IA</p>
-        <p>Universidad de Santander</p>
-        <p>2026</p>
+    <footer class="nuevo-footer">
+        <div class="footer-contenido">
+            <div class="footer-item">
+                <span class="icono">👨‍🎓</span>
+                <p>Estudiante</p>
+                <strong>Janer Andrés Bustillo</strong>
+            </div>
+            <div class="footer-item">
+                <span class="icono">💻</span>
+                <p>Desarrollo</p>
+                <strong>Full Stack con IA</strong>
+            </div>
+            <div class="footer-item">
+                <span class="icono">🏛️</span>
+                <p>Universidad</p>
+                <strong>Universidad de Santander</strong>
+            </div>
+            <div class="footer-item">
+                <span class="icono">📅</span>
+                <p>Año</p>
+                <strong>2026</strong>
+            </div>
+        </div>
     </footer>
 
     <script src="script.js"></script>
