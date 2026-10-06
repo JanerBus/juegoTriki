@@ -113,12 +113,17 @@ header h1 {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Clases de utilidad */
+.mt-15 { margin-top: 15px; }
+.top-actions { width: 100%; display: flex; justify-content: center; }
+
 /* Selector de Modo (Segmented Control) */
 .controls-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 25px;
+    width: 100%;
 }
 
 .segmented-control {
@@ -241,6 +246,11 @@ header h1 {
     font-weight: 600;
     margin-bottom: 5px;
     transition: var(--transition-smooth);
+    text-align: center;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .marcador .puntaje {
@@ -403,6 +413,89 @@ header h1 {
 
 .btn-secondary:hover {
     color: var(--color-o);
+}
+
+/* Modal de Personalización */
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+}
+
+.modal.activo {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-contenido {
+    background: var(--bg-main);
+    border: 1px solid var(--border-light);
+    border-radius: 24px;
+    padding: 30px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: translateY(20px);
+    transition: var(--transition-smooth);
+}
+
+.modal.activo .modal-contenido {
+    transform: translateY(0);
+}
+
+.modal-contenido h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+.ajuste-grupo {
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+}
+
+.ajuste-grupo h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.input-moderno {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition-smooth);
+    min-width: 0; /* Para evitar desbordamientos flex */
+}
+
+.input-moderno:focus {
+    border-color: var(--color-x);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* Footer Minimalista */

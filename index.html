@@ -6,6 +6,8 @@
     <title>Tic-Tac-Toe Pro</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Librería de Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <!-- Efectos de fondo ambientales -->
@@ -21,9 +23,14 @@
         </header>
 
         <div class="game-wrapper">
-            <!-- Selector de Modo y Dificultad -->
+            <!-- Controles Adicionales -->
             <div class="controls-section">
-                <div class="segmented-control">
+                <div class="top-actions">
+                    <button id="btn-config" class="btn-secondary">⚙️ Personalizar Jugadores</button>
+                </div>
+
+                <!-- Selector de Modo -->
+                <div class="segmented-control mt-15">
                     <input type="radio" id="modo-1v1" name="modo" value="1v1" checked>
                     <label for="modo-1v1" class="segment">
                         <span>👥 1 vs 1</span>
@@ -50,7 +57,7 @@
             <!-- Marcador -->
             <div class="marcador">
                 <div class="jugador-score">
-                    <span class="etiqueta">Jugador X</span>
+                    <span class="etiqueta" id="etiqueta-x">Jugador X</span>
                     <span class="puntaje" id="score-x">0</span>
                 </div>
                 <div class="empates-score">
@@ -92,6 +99,45 @@
             </div>
         </div>
     </main>
+
+    <!-- Modal Configuración -->
+    <div id="modal-config" class="modal">
+        <div class="modal-contenido">
+            <h2>Personalizar Partida</h2>
+            
+            <div class="ajuste-grupo">
+                <h3>Jugador 1 (Empieza)</h3>
+                <div class="input-row">
+                    <input type="text" id="nombre-j1" class="input-moderno" placeholder="Nombre">
+                    <select id="ficha-j1" class="select-moderno">
+                        <option value="X">X</option>
+                        <option value="🐶">🐶</option>
+                        <option value="🍕">🍕</option>
+                        <option value="⚔️">⚔️</option>
+                        <option value="🌟">🌟</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ajuste-grupo">
+                <h3>Jugador 2 / Máquina</h3>
+                <div class="input-row">
+                    <input type="text" id="nombre-j2" class="input-moderno" placeholder="Nombre">
+                    <select id="ficha-j2" class="select-moderno">
+                        <option value="O">O</option>
+                        <option value="🐱">🐱</option>
+                        <option value="🍔">🍔</option>
+                        <option value="🛡️">🛡️</option>
+                        <option value="🔥">🔥</option>
+                        <option value="🤖">🤖</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="btn-guardar-config" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 15px;">Guardar y Reiniciar</button>
+            <button id="btn-cerrar-config" class="btn-secondary" style="width: 100%; justify-content: center; margin-top: 10px;">Cancelar</button>
+        </div>
+    </div>
 
     <!-- Footer Minimalista -->
     <footer class="modern-footer">

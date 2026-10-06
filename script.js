@@ -5,12 +5,13 @@ const btnResetMarcador = document.getElementById('reset-marcador');
 const radiosModo = document.querySelectorAll('input[name="modo"]');
 const selectorDificultad = document.getElementById('selector-dificultad');
 const selectIA = document.getElementById('dificultad');
-const etiquetaO = document.getElementById('etiqueta-o');
 
 const scoreXEl = document.getElementById('score-x');
 const scoreOEl = document.getElementById('score-o');
 const scoreEmpatesEl = document.getElementById('score-empates');
 const tableroDOM = document.getElementById('tablero');
+const etiquetaX = document.getElementById('etiqueta-x');
+const etiquetaO = document.getElementById('etiqueta-o');
 
 let tablero = ['', '', '', '', '', '', '', '', ''];
 let jugadorActual = 'X';
@@ -18,7 +19,12 @@ let juegoActivo = true;
 let modoJuego = '1v1'; 
 let dificultad = 'medio';
 
-// Puntajes desde LocalStorage
+// ---- CONFIGURACIÓN PERSONALIZADA ----
+let config = JSON.parse(localStorage.getItem('triki_config')) || {
+    j1: { nombre: 'Jugador 1', ficha: 'X' },
+    j2: { nombre: 'Jugador 2', ficha: 'O' }
+};
+
 let puntajes = JSON.parse(localStorage.getItem('triki_puntajes')) || { X: 0, O: 0, Empates: 0 };
 
 const condicionesGanadoras = [
@@ -27,11 +33,77 @@ const condicionesGanadoras = [
     [0, 4, 8], [2, 4, 6]             
 ];
 
-// Inicializar UI de marcador
+// ---- WEB AUDIO API (Efectos de sonido) ----
+let audioCtx;
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+// Inicializar audio en la primera interacción para sortear la restricción del navegador
+document.body.addEventListener('click', initAudio, { once: true });
+
+function playTone(frequency, type, duration, vol = 0.1) {
+    if (!audioCtx) return;
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = frequency;
+    
+    gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + duration);
+}
+
+function playClick() { playTone(400, 'sine', 0.1, 0.1); }
+function playWin() {
+    playTone(440, 'triangle', 0.15, 0.1);
+    setTimeout(() => playTone(554, 'triangle', 0.15, 0.1), 100);
+    setTimeout(() => playTone(659, 'triangle', 0.15, 0.1), 200);
+    setTimeout(() => playTone(880, 'triangle', 0.4, 0.15), 300);
+}
+function playTie() {
+    playTone(300, 'sawtooth', 0.3, 0.1);
+    setTimeout(() => playTone(250, 'sawtooth', 0.4, 0.1), 200);
+}
+function playMachineThinking() { playTone(200, 'sine', 0.1, 0.05); }
+
+// ---- EFECTO DE CONFETI ----
+function lanzarConfeti() {
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#38bdf8', '#fb7185', '#ffffff']
+        });
+    }
+}
+
+// ---- INTERFAZ Y EVENTOS ----
 function actualizarMarcadorUI() {
     scoreXEl.textContent = puntajes.X;
     scoreOEl.textContent = puntajes.O;
     scoreEmpatesEl.textContent = puntajes.Empates;
+}
+
+function aplicarConfiguracion() {
+    etiquetaX.textContent = config.j1.nombre;
+    if (modoJuego === 'vsMaquina') {
+        etiquetaO.textContent = config.j2.nombre + ' 🤖';
+    } else {
+        etiquetaO.textContent = config.j2.nombre;
+    }
+    actualizarMarcadorUI();
 }
 
 function guardarPuntajes() {
@@ -39,19 +111,15 @@ function guardarPuntajes() {
     actualizarMarcadorUI();
 }
 
-actualizarMarcadorUI();
-
-// Eventos de configuración
 radiosModo.forEach(radio => {
     radio.addEventListener('change', (e) => {
         modoJuego = e.target.value;
         if (modoJuego === 'vsMaquina') {
             selectorDificultad.classList.remove('oculto');
-            etiquetaO.textContent = 'Máquina 🤖';
         } else {
             selectorDificultad.classList.add('oculto');
-            etiquetaO.textContent = 'Jugador O';
         }
+        aplicarConfiguracion();
         reiniciarJuego();
     });
 });
@@ -67,17 +135,19 @@ function manejarClickCelda(e) {
     const celda = e.target;
     const indice = parseInt(celda.getAttribute('data-indice'));
 
-    if (tablero[indice] !== '' || !juegoActivo) {
-        return;
-    }
+    if (tablero[indice] !== '' || !juegoActivo) return;
 
     realizarMovimiento(celda, indice);
 }
 
 function realizarMovimiento(celda, indice) {
+    playClick();
     tablero[indice] = jugadorActual;
-    celda.textContent = jugadorActual;
-    celda.classList.add(jugadorActual.toLowerCase());
+    
+    // Ficha personalizada
+    let fichaVisual = jugadorActual === 'X' ? config.j1.ficha : config.j2.ficha;
+    celda.textContent = fichaVisual;
+    celda.classList.add(jugadorActual.toLowerCase()); // Para el color/sombra CSS
     
     verificarGanador();
 }
@@ -94,19 +164,19 @@ function verificarGanador() {
     }
 
     if (lineaGanadora) {
-        estado.textContent = `¡Ganador: ${jugadorActual}! 🎉`;
+        let nombreGanador = jugadorActual === 'X' ? config.j1.nombre : (modoJuego === 'vsMaquina' ? config.j2.nombre + ' 🤖' : config.j2.nombre);
+        estado.textContent = `¡Ganador: ${nombreGanador}! 🎉`;
         estado.style.color = jugadorActual === 'X' ? 'var(--color-x)' : 'var(--color-o)';
         estado.style.borderColor = jugadorActual === 'X' ? 'var(--color-x-glow)' : 'var(--color-o-glow)';
         
-        // Efectos visuales de victoria
         tableroDOM.classList.add('finalizado');
-        lineaGanadora.forEach(idx => {
-            celdas[idx].classList.add('ganadora');
-        });
+        lineaGanadora.forEach(idx => celdas[idx].classList.add('ganadora'));
 
-        // Actualizar marcador
         puntajes[jugadorActual]++;
         guardarPuntajes();
+        
+        playWin();
+        lanzarConfeti();
 
         juegoActivo = false;
         return;
@@ -117,9 +187,9 @@ function verificarGanador() {
         estado.style.color = 'var(--text-main)';
         estado.style.borderColor = 'var(--border-light)';
         
-        // Actualizar marcador
         puntajes.Empates++;
         guardarPuntajes();
+        playTie();
 
         juegoActivo = false;
         return;
@@ -130,7 +200,9 @@ function verificarGanador() {
 
 function cambiarJugador() {
     jugadorActual = jugadorActual === 'X' ? 'O' : 'X';
-    estado.textContent = `Turno de ${jugadorActual}`;
+    let nombreActual = jugadorActual === 'X' ? config.j1.nombre : (modoJuego === 'vsMaquina' ? config.j2.nombre + ' 🤖' : config.j2.nombre);
+    
+    estado.textContent = `Turno de ${nombreActual}`;
     estado.style.color = jugadorActual === 'X' ? 'var(--color-x)' : 'var(--color-o)';
     estado.style.borderColor = 'var(--border-light)';
 
@@ -138,6 +210,8 @@ function cambiarJugador() {
         juegoActivo = false; 
         estado.textContent = 'IA pensando... 🤖';
         estado.style.color = 'var(--text-muted)';
+        
+        playMachineThinking();
 
         setTimeout(() => {
             juegoActivo = true;
@@ -151,9 +225,7 @@ function movimientoMaquina() {
 
     if (dificultad === 'facil') {
         let vacios = obtenerCeldasVacias();
-        if (vacios.length > 0) {
-            indice = vacios[Math.floor(Math.random() * vacios.length)];
-        }
+        if (vacios.length > 0) indice = vacios[Math.floor(Math.random() * vacios.length)];
     } else if (dificultad === 'medio') {
         indice = buscarMejorMovimiento('O');
         if (indice === -1) indice = buscarMejorMovimiento('X');
@@ -197,7 +269,7 @@ function obtenerCeldasVacias() {
     return tablero.map((val, i) => val === '' ? i : null).filter(val => val !== null);
 }
 
-// ---- Algoritmo Minimax (Dificultad Imposible) ----
+// ---- Minimax Algoritmo ----
 const puntajesMinimax = { 'O': 10, 'X': -10, 'empate': 0 };
 
 function verificarGanadorMinimax(tableroTemp) {
@@ -214,7 +286,6 @@ function verificarGanadorMinimax(tableroTemp) {
 function minimax(tableroTemp, profundidad, esMaximizador) {
     let resultado = verificarGanadorMinimax(tableroTemp);
     if (resultado !== null) {
-        // Optimización: preferir victorias más rápidas o demorar derrotas
         if (resultado === 'O') return puntajesMinimax[resultado] - profundidad;
         if (resultado === 'X') return puntajesMinimax[resultado] + profundidad;
         return puntajesMinimax[resultado];
@@ -244,13 +315,15 @@ function minimax(tableroTemp, profundidad, esMaximizador) {
         return mejorPuntaje;
     }
 }
-// ----------------------------
 
+// ---- Reset ----
 function reiniciarJuego() {
     tablero = ['', '', '', '', '', '', '', '', ''];
     jugadorActual = 'X';
     juegoActivo = true;
-    estado.textContent = `Turno de ${jugadorActual}`;
+    
+    let nombreActual = config.j1.nombre;
+    estado.textContent = `Turno de ${nombreActual}`;
     estado.style.color = 'var(--color-x)';
     estado.style.borderColor = 'var(--border-light)';
     tableroDOM.classList.remove('finalizado');
@@ -261,7 +334,7 @@ function reiniciarJuego() {
     });
 }
 
-// Botones de acciones
+// ---- Eventos ----
 btnReiniciar.addEventListener('click', reiniciarJuego);
 
 btnResetMarcador.addEventListener('click', () => {
@@ -271,6 +344,47 @@ btnResetMarcador.addEventListener('click', () => {
     }
 });
 
-// Inicialización
-estado.style.color = 'var(--color-x)';
+// Modal Configuración
+const modalConfig = document.getElementById('modal-config');
+const btnAbreConfig = document.getElementById('btn-config');
+const btnCierraConfig = document.getElementById('btn-cerrar-config');
+const btnGuardarConfig = document.getElementById('btn-guardar-config');
+
+const inputNom1 = document.getElementById('nombre-j1');
+const inputNom2 = document.getElementById('nombre-j2');
+const selectFicha1 = document.getElementById('ficha-j1');
+const selectFicha2 = document.getElementById('ficha-j2');
+
+function cargarModal() {
+    inputNom1.value = config.j1.nombre;
+    inputNom2.value = config.j2.nombre;
+    selectFicha1.value = config.j1.ficha;
+    selectFicha2.value = config.j2.ficha;
+}
+
+btnAbreConfig.addEventListener('click', () => {
+    cargarModal();
+    modalConfig.classList.add('activo');
+});
+
+btnCierraConfig.addEventListener('click', () => {
+    modalConfig.classList.remove('activo');
+});
+
+btnGuardarConfig.addEventListener('click', () => {
+    config.j1.nombre = inputNom1.value.trim() || 'Jugador 1';
+    config.j1.ficha = selectFicha1.value;
+    config.j2.nombre = inputNom2.value.trim() || 'Jugador 2';
+    config.j2.ficha = selectFicha2.value;
+    
+    localStorage.setItem('triki_config', JSON.stringify(config));
+    
+    aplicarConfiguracion();
+    modalConfig.classList.remove('activo');
+    reiniciarJuego();
+});
+
+// Inicialización final
+aplicarConfiguracion();
+reiniciarJuego();
 celdas.forEach(celda => celda.addEventListener('click', manejarClickCelda));
