@@ -6,15 +6,14 @@ const radiosModo = document.querySelectorAll('input[name="modo"]');
 let tablero = ['', '', '', '', '', '', '', '', ''];
 let jugadorActual = 'X';
 let juegoActivo = true;
-let modoJuego = '1v1'; // '1v1' o 'vsMaquina'
+let modoJuego = '1v1'; 
 
 const condicionesGanadoras = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Filas
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columnas
-    [0, 4, 8], [2, 4, 6]             // Diagonales
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+    [0, 4, 8], [2, 4, 6]             
 ];
 
-// Cambiar modo de juego
 radiosModo.forEach(radio => {
     radio.addEventListener('change', (e) => {
         modoJuego = e.target.value;
@@ -23,7 +22,6 @@ radiosModo.forEach(radio => {
 });
 
 function manejarClickCelda(e) {
-    // Si es modo vs máquina y el turno es de 'O', el usuario no puede hacer clic
     if (modoJuego === 'vsMaquina' && jugadorActual === 'O') return;
 
     const celda = e.target;
@@ -56,15 +54,17 @@ function verificarGanador() {
     }
 
     if (rondaGanada) {
-        estado.textContent = `¡El jugador ${jugadorActual} ha ganado! 🎉`;
-        estado.style.color = jugadorActual === 'X' ? 'var(--color-primario)' : 'var(--color-secundario)';
+        estado.textContent = `¡Ganador: ${jugadorActual}! 🎉`;
+        estado.style.color = jugadorActual === 'X' ? 'var(--color-x)' : 'var(--color-o)';
+        estado.style.borderColor = jugadorActual === 'X' ? 'var(--color-x-glow)' : 'var(--color-o-glow)';
         juegoActivo = false;
         return;
     }
 
     if (!tablero.includes('')) {
-        estado.textContent = '¡Empate! 🤝';
-        estado.style.color = '#ffa502';
+        estado.textContent = '¡Es un Empate! 🤝';
+        estado.style.color = 'var(--text-main)';
+        estado.style.borderColor = 'var(--border-light)';
         juegoActivo = false;
         return;
     }
@@ -75,38 +75,34 @@ function verificarGanador() {
 function cambiarJugador() {
     jugadorActual = jugadorActual === 'X' ? 'O' : 'X';
     estado.textContent = `Turno de ${jugadorActual}`;
-    estado.style.color = jugadorActual === 'X' ? 'var(--color-primario)' : 'var(--color-secundario)';
+    estado.style.color = jugadorActual === 'X' ? 'var(--color-x)' : 'var(--color-o)';
+    estado.style.borderColor = 'var(--border-light)';
 
-    // Si es el turno de la máquina
     if (modoJuego === 'vsMaquina' && jugadorActual === 'O' && juegoActivo) {
-        juegoActivo = false; // Bloquear tablero temporalmente
-        estado.textContent = 'La máquina está pensando... 🤖';
-        estado.style.color = '#a4b0be';
+        juegoActivo = false; 
+        estado.textContent = 'IA pensando... 🤖';
+        estado.style.color = 'var(--text-muted)';
 
         setTimeout(() => {
             juegoActivo = true;
             movimientoMaquina();
-        }, 800); // Retraso para dar la sensación de que está pensando
+        }, 600); 
     }
 }
 
 function movimientoMaquina() {
     let indice = -1;
 
-    // 1. Intentar ganar
     indice = buscarMejorMovimiento('O');
     
-    // 2. Bloquear al jugador si está a punto de ganar
     if (indice === -1) {
         indice = buscarMejorMovimiento('X');
     }
     
-    // 3. Tomar el centro si está libre
     if (indice === -1 && tablero[4] === '') {
         indice = 4;
     }
     
-    // 4. Tomar un espacio aleatorio
     if (indice === -1) {
         let vacios = tablero.map((val, i) => val === '' ? i : null).filter(val => val !== null);
         if (vacios.length > 0) {
@@ -128,7 +124,7 @@ function buscarMejorMovimiento(jugador) {
         if (tablero[a] === jugador && tablero[c] === jugador && tablero[b] === '') return b;
         if (tablero[b] === jugador && tablero[c] === jugador && tablero[a] === '') return a;
     }
-    return -1; // No se encontró un movimiento crítico
+    return -1; 
 }
 
 function reiniciarJuego() {
@@ -136,7 +132,8 @@ function reiniciarJuego() {
     jugadorActual = 'X';
     juegoActivo = true;
     estado.textContent = `Turno de ${jugadorActual}`;
-    estado.style.color = 'var(--color-primario)';
+    estado.style.color = 'var(--color-x)';
+    estado.style.borderColor = 'var(--border-light)';
 
     celdas.forEach(celda => {
         celda.textContent = '';
@@ -144,7 +141,7 @@ function reiniciarJuego() {
     });
 }
 
-// Inicializar
-estado.style.color = 'var(--color-primario)';
+// Inicialización
+estado.style.color = 'var(--color-x)';
 celdas.forEach(celda => celda.addEventListener('click', manejarClickCelda));
 btnReiniciar.addEventListener('click', reiniciarJuego);

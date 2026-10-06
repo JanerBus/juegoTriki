@@ -3,66 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Triki</title>
+    <title>Tic-Tac-Toe Pro</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>🎮 Juego de Triki 🎮</h1>
-    </header>
+    <!-- Efectos de fondo ambientales -->
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
 
-    <section class="instrucciones">
-        <h2>¿Cómo se juega?</h2>
-        <p>El Triki (o Tres en línea) es un juego para dos jugadores, <strong style="color: var(--color-primario);">X</strong> y <strong style="color: var(--color-secundario);">O</strong>, que se turnan para marcar los espacios en una cuadrícula de 3×3.</p>
-        <p>El jugador que logre colocar tres de sus marcas en una fila horizontal, vertical o diagonal será el ganador.</p>
-    </section>
+    <main class="app-container">
+        <header>
+            <h1>Tic-Tac-Toe</h1>
+            <p class="subtitle">El clásico, rediseñado.</p>
+        </header>
 
-    <main class="juego-contenedor">
-        <div class="controles">
-            <label>
-                <input type="radio" name="modo" value="1v1" checked> 👤 vs 👤
-            </label>
-            <label>
-                <input type="radio" name="modo" value="vsMaquina"> 👤 vs 🤖
-            </label>
+        <div class="game-wrapper">
+            <!-- Selector de Modo de Juego tipo iOS -->
+            <div class="controls-section">
+                <div class="segmented-control">
+                    <input type="radio" id="modo-1v1" name="modo" value="1v1" checked>
+                    <label for="modo-1v1" class="segment">
+                        <span>👥 1 vs 1</span>
+                    </label>
+                    
+                    <input type="radio" id="modo-vsMaquina" name="modo" value="vsMaquina">
+                    <label for="modo-vsMaquina" class="segment">
+                        <span>🤖 vs IA</span>
+                    </label>
+                    <div class="slider"></div>
+                </div>
+            </div>
+
+            <!-- Tablero y Estado -->
+            <div class="board-container">
+                <div class="status-badge" id="estado">Turno de X</div>
+                <div class="tablero" id="tablero">
+                    <div class="celda" data-indice="0"></div>
+                    <div class="celda" data-indice="1"></div>
+                    <div class="celda" data-indice="2"></div>
+                    <div class="celda" data-indice="3"></div>
+                    <div class="celda" data-indice="4"></div>
+                    <div class="celda" data-indice="5"></div>
+                    <div class="celda" data-indice="6"></div>
+                    <div class="celda" data-indice="7"></div>
+                    <div class="celda" data-indice="8"></div>
+                </div>
+            </div>
+
+            <!-- Botón de Reinicio Moderno -->
+            <button id="reiniciar" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                Reiniciar Partida
+            </button>
         </div>
-        
-        <div class="estado" id="estado">Turno de X</div>
-        <div class="tablero" id="tablero">
-            <div class="celda" data-indice="0"></div>
-            <div class="celda" data-indice="1"></div>
-            <div class="celda" data-indice="2"></div>
-            <div class="celda" data-indice="3"></div>
-            <div class="celda" data-indice="4"></div>
-            <div class="celda" data-indice="5"></div>
-            <div class="celda" data-indice="6"></div>
-            <div class="celda" data-indice="7"></div>
-            <div class="celda" data-indice="8"></div>
-        </div>
-        <button id="reiniciar">Reiniciar Juego</button>
     </main>
 
-    <footer class="nuevo-footer">
-        <div class="footer-contenido">
-            <div class="footer-item">
-                <span class="icono">👨‍🎓</span>
-                <p>Estudiante</p>
-                <strong>Janer Andrés Bustillo</strong>
+    <!-- Footer Minimalista -->
+    <footer class="modern-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <span class="label">Desarrollador</span>
+                <span class="value">Janer Andrés Bustillo</span>
             </div>
-            <div class="footer-item">
-                <span class="icono">💻</span>
-                <p>Desarrollo</p>
-                <strong>Full Stack con IA</strong>
+            <div class="footer-col">
+                <span class="label">Especialidad</span>
+                <span class="value">Full Stack & IA</span>
             </div>
-            <div class="footer-item">
-                <span class="icono">🏛️</span>
-                <p>Universidad</p>
-                <strong>Universidad de Santander</strong>
+            <div class="footer-col">
+                <span class="label">Institución</span>
+                <span class="value">Univ. de Santander</span>
             </div>
-            <div class="footer-item">
-                <span class="icono">📅</span>
-                <p>Año</p>
-                <strong>2026</strong>
+            <div class="footer-col">
+                <span class="label">Año</span>
+                <span class="value">2026</span>
             </div>
         </div>
     </footer>
