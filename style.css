@@ -81,7 +81,7 @@ body {
 
 header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 header h1 {
@@ -115,7 +115,10 @@ header h1 {
 
 /* Selector de Modo (Segmented Control) */
 .controls-section {
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
 .segmented-control {
@@ -167,6 +170,89 @@ header h1 {
 #modo-vsMaquina:checked ~ .slider {
     transform: translateX(100%);
 }
+
+/* Selector de dificultad */
+.dificultad-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    animation: fadeIn 0.3s ease;
+}
+
+.dificultad-selector.oculto {
+    display: none;
+}
+
+.dificultad-selector label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.select-moderno {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.select-moderno:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.select-moderno option {
+    background: var(--bg-main);
+}
+
+/* Marcador */
+.marcador {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 15px 40px;
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 4px 15px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.jugador-score, .empates-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.marcador .etiqueta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    transition: var(--transition-smooth);
+}
+
+.marcador .puntaje {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#score-x { color: var(--color-x); }
+#score-o { color: var(--color-o); }
+
 
 /* Contenedor del Tablero Glassmorphism */
 .board-container {
@@ -241,9 +327,38 @@ header h1 {
     100% { transform: scale(1); opacity: 1; }
 }
 
-/* Botón de Reinicio Moderno */
-.btn-primary {
+/* Efectos visuales de victoria */
+.tablero.finalizado .celda:not(.ganadora) {
+    opacity: 0.3;
+    filter: grayscale(80%);
+}
+
+.celda.ganadora {
+    animation: pulseWin 1.5s infinite;
+    z-index: 10;
+}
+
+@keyframes pulseWin {
+    0% { transform: scale(1); box-shadow: inset 0 0 10px rgba(255,255,255,0.1); }
+    50% { transform: scale(1.05); box-shadow: inset 0 0 25px rgba(255,255,255,0.3); }
+    100% { transform: scale(1); box-shadow: inset 0 0 10px rgba(255,255,255,0.1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botones y acciones */
+.botones-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
     margin-top: 35px;
+}
+
+.btn-primary {
     background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
     border: 1px solid var(--border-light);
     color: var(--text-main);
@@ -270,6 +385,24 @@ header h1 {
 
 .btn-primary:active {
     transform: translateY(1px);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition-smooth);
+    padding: 5px 10px;
+}
+
+.btn-secondary:hover {
+    color: var(--color-o);
 }
 
 /* Footer Minimalista */
@@ -325,4 +458,5 @@ header h1 {
         grid-template-columns: 1fr 1fr;
         gap: 25px 15px;
     }
+    .marcador { gap: 20px; padding: 15px 20px; }
 }

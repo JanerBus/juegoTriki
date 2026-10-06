@@ -21,7 +21,7 @@
         </header>
 
         <div class="game-wrapper">
-            <!-- Selector de Modo de Juego tipo iOS -->
+            <!-- Selector de Modo y Dificultad -->
             <div class="controls-section">
                 <div class="segmented-control">
                     <input type="radio" id="modo-1v1" name="modo" value="1v1" checked>
@@ -34,6 +34,32 @@
                         <span>🤖 vs IA</span>
                     </label>
                     <div class="slider"></div>
+                </div>
+                
+                <!-- Opciones IA -->
+                <div class="dificultad-selector oculto" id="selector-dificultad">
+                    <label for="dificultad">Nivel de IA:</label>
+                    <select id="dificultad" class="select-moderno">
+                        <option value="facil">Fácil 🐣</option>
+                        <option value="medio" selected>Medio 🧠</option>
+                        <option value="imposible">Imposible 😈</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Marcador -->
+            <div class="marcador">
+                <div class="jugador-score">
+                    <span class="etiqueta">Jugador X</span>
+                    <span class="puntaje" id="score-x">0</span>
+                </div>
+                <div class="empates-score">
+                    <span class="etiqueta">Empates</span>
+                    <span class="puntaje" id="score-empates">0</span>
+                </div>
+                <div class="jugador-score">
+                    <span class="etiqueta" id="etiqueta-o">Jugador O</span>
+                    <span class="puntaje" id="score-o">0</span>
                 </div>
             </div>
 
@@ -53,11 +79,17 @@
                 </div>
             </div>
 
-            <!-- Botón de Reinicio Moderno -->
-            <button id="reiniciar" class="btn-primary">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                Reiniciar Partida
-            </button>
+            <!-- Botones de Acción -->
+            <div class="botones-acciones">
+                <button id="reiniciar" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    Siguiente Ronda
+                </button>
+                <button id="reset-marcador" class="btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    Reiniciar Marcador
+                </button>
+            </div>
         </div>
     </main>
 
